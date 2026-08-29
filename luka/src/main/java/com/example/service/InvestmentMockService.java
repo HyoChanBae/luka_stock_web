@@ -1,7 +1,6 @@
 package com.example.service;
 
 import com.example.model.AlertSetting;
-import com.example.model.BotRank;
 import com.example.model.BotType;
 import com.example.model.Decision;
 import com.example.model.LabeledValue;
@@ -76,19 +75,6 @@ public class InvestmentMockService {
                         ""
                 )
         );
-    }
-
-    public List<BotRank> botLeague() {
-        return List.of(
-                new BotRank(1, "WaveRider", "파도타기", "GPT", "+12.4%", "-5.1%", "34회"),
-                new BotRank(2, "MacroShield", "거시 안정형", "Claude", "+9.7%", "-2.4%", "11회"),
-                new BotRank(3, "BookValue", "가치투자", "GPT", "+8.1%", "-4.0%", "9회"),
-                new BotRank(4, "VolQuant", "변동성 퀀트", "Rule+LLM", "+6.8%", "-7.8%", "57회")
-        );
-    }
-
-    public List<BotRank> homeBotPreview() {
-        return botLeague().stream().filter(bot -> bot.getRank() > 1 && bot.getRank() <= 3).toList();
     }
 
     public List<Position> positions() {

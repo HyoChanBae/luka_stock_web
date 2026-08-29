@@ -23,6 +23,8 @@
     <!-- CSS / JS 정적 리소스 -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
 
+    <import resource="data-source.xml" />
+
     <!-- JSP View Resolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 

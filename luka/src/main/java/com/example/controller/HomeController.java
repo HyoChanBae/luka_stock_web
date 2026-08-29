@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.service.BotService;
 import com.example.service.InvestmentMockService;
 import com.example.web.PageAttributes;
 import org.springframework.stereotype.Controller;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     private final InvestmentMockService investmentMockService;
+    private final BotService botService;
 
-    public HomeController(InvestmentMockService investmentMockService) {
+    public HomeController(InvestmentMockService investmentMockService, BotService botService) {
         this.investmentMockService = investmentMockService;
+        this.botService = botService;
     }
 
     @GetMapping("/")
@@ -24,7 +27,7 @@ public class HomeController {
         model.addAttribute("metrics", investmentMockService.homeMetrics());
         model.addAttribute("riskEvents", investmentMockService.riskEvents());
         model.addAttribute("decisions", investmentMockService.decisions());
-        model.addAttribute("homeBots", investmentMockService.homeBotPreview());
+        model.addAttribute("homeBots", botService.league());
         model.addAttribute("positions", investmentMockService.positions());
         model.addAttribute("summaries", investmentMockService.todaySummaries());
         model.addAttribute(

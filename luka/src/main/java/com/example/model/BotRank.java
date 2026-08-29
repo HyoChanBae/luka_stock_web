@@ -2,57 +2,94 @@ package com.example.model;
 
 public class BotRank {
 
+    private final long botId;
     private final int rank;
+    private final String code;
     private final String name;
-    private final String style;
-    private final String llm;
-    private final String returnRate;
-    private final String mdd;
-    private final String trades;
+    private final String description;
+    private final String modelType;
+    private final Double dailyReturn;
+    private final Double cumReturn;
 
     public BotRank(
+            long botId,
             int rank,
+            String code,
             String name,
-            String style,
-            String llm,
-            String returnRate,
-            String mdd,
-            String trades
+            String description,
+            String modelType,
+            Double dailyReturn,
+            Double cumReturn
     ) {
+        this.botId = botId;
         this.rank = rank;
+        this.code = code;
         this.name = name;
-        this.style = style;
-        this.llm = llm;
-        this.returnRate = returnRate;
-        this.mdd = mdd;
-        this.trades = trades;
+        this.description = description;
+        this.modelType = modelType;
+        this.dailyReturn = dailyReturn;
+        this.cumReturn = cumReturn;
+    }
+
+    public long getBotId() {
+        return botId;
     }
 
     public int getRank() {
         return rank;
     }
 
+    public String getCode() {
+        return code;
+    }
+
     public String getName() {
         return name;
     }
 
-    public String getStyle() {
-        return style;
+    public String getDescription() {
+        return description;
     }
 
-    public String getLlm() {
-        return llm;
+    public String getModelType() {
+        return modelType;
     }
 
-    public String getReturnRate() {
-        return returnRate;
+    public Double getDailyReturn() {
+        return dailyReturn;
     }
 
-    public String getMdd() {
-        return mdd;
+    public Double getCumReturn() {
+        return cumReturn;
     }
 
-    public String getTrades() {
-        return trades;
+    public String getDailyDisplay() {
+        return formatPercent(dailyReturn);
+    }
+
+    public String getCumDisplay() {
+        return formatPercent(cumReturn);
+    }
+
+    public String getDailyClass() {
+        return cssClass(dailyReturn);
+    }
+
+    public String getCumClass() {
+        return cssClass(cumReturn);
+    }
+
+    private static String formatPercent(Double value) {
+        if (value == null) {
+            return "—";
+        }
+        return String.format(java.util.Locale.US, "%+.1f%%", value);
+    }
+
+    private static String cssClass(Double value) {
+        if (value == null || value < 0) {
+            return "neg";
+        }
+        return "perf";
     }
 }

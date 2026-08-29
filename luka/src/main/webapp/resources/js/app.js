@@ -8,4 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (window.QuietAlpha.Scenario) {
     QuietAlpha.Scenario.init();
   }
+  if (window.QuietAlpha.BotDetail) {
+    QuietAlpha.BotDetail.init();
+  }
 });

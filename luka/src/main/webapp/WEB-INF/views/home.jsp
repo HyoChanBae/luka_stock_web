@@ -99,23 +99,27 @@
             <h3 class="section-title">이번 달 가장 잘한 AI</h3>
             <a class="link" href="<c:url value='/bots'/>">전체 랭킹 ›</a>
         </div>
-        <div class="featured-bot">
-            <div class="eyebrow">🥇 WaveRider · 파도타기</div>
-            <div class="asset top-bot-return">+12.4%</div>
-            <div class="small">30일 · MDD -5.1% · 34회 거래 · GPT 기반</div>
-        </div>
-        <c:forEach items="${homeBots}" var="bot">
-            <div class="bot-rank">
-                <div class="rank">${bot.rank}</div>
-                <div class="botname">
-                    <b>${bot.name}</b>
-                    <span>${bot.style}</span>
+        <c:forEach items="${homeBots}" var="bot" varStatus="status">
+            <c:if test="${status.first}">
+                <div class="featured-bot">
+                    <div class="eyebrow">🥇 ${bot.name} · ${bot.description}</div>
+                    <div class="asset top-bot-return ${bot.dailyClass}">${bot.dailyDisplay}</div>
+                    <div class="small">누적 ${bot.cumDisplay} · ${bot.modelType}</div>
                 </div>
-                <div>${bot.llm}</div>
-                <div class="perf">${bot.returnRate}</div>
-                <div>${bot.mdd}</div>
-                <div>${bot.trades}</div>
-            </div>
+            </c:if>
+            <c:if test="${!status.first && status.index lt 3}">
+                <div class="bot-rank">
+                    <div class="rank">${bot.rank}</div>
+                    <div class="botname">
+                        <b>${bot.name}</b>
+                        <span>${bot.description}</span>
+                    </div>
+                    <div>${bot.modelType}</div>
+                    <div class="${bot.dailyClass}">${bot.dailyDisplay}</div>
+                    <div class="${bot.cumClass}">${bot.cumDisplay}</div>
+                    <div></div>
+                </div>
+            </c:if>
         </c:forEach>
     </div>
 
