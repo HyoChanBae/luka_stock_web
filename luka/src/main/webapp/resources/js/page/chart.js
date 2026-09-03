@@ -6,57 +6,103 @@ QuietAlpha.Chart = {
     if (!container || !window.TradingView) {
       return;
     }
-
-    var libraryPath = (window.QuietAlphaChartConfig && window.QuietAlphaChartConfig.libraryPath)
-        || "/resources/js/charting_library/";
-    var symbols = dummySymbols();
-    var datafeed = createDummyDatafeed(symbols);
-
-    window.tvWidget = new TradingView.widget({
-      symbol: "AAPL",
-      interval: "1D",
-      container: "tv_chart_container",
-      datafeed: datafeed,
-      library_path: libraryPath,
-      locale: "kr",
-      timezone: "Asia/Seoul",
-      autosize: true,
-      enabled_features: [
-        "show_spread_operators",
-        "compare_symbol_search_spread_operators",
-        "custom_resolutions"
-      ],
-      disabled_features: ["header_saveload", "use_localstorage_for_settings"],
-      overrides: {
-        "mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker-and-description"
-      },
-      symbol_search_request_delay: 500,
-      custom_formatters: {
-        dateFormatter: {
-          format: function (date) {
-            return date.getUTCFullYear() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCDate();
-          }
-        },
-        tickMarkFormatter: function (date, tickMarkType) {
-          switch (tickMarkType) {
-            case "Year":
-              return date.getUTCFullYear() + "년";
-            case "Month":
-              return date.getUTCMonth() + 1 + "월";
-            case "DayOfMonth":
-              return date.getUTCDate() + "일";
-            case "Time":
-              return date.getUTCHours() + ":" + date.getUTCMinutes();
-            case "TimeWithSeconds":
-              return date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
-            default:
-              return "";
-          }
-        }
-      }
-    });
+    if (isRealMobile()) {
+      document.body.classList.add("touch-chart");
+      waitForContainerSize(container, 0, function () {
+        createWidget(container, true);
+      });
+      return;
+    }
+    createWidget(container, false);
   }
 };
+
+function isRealMobile() {
+  var ua = navigator.userAgent || "";
+  var phone = /iPhone|iPod|Android.+Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  var ipad = /iPad/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var coarse = window.matchMedia("(pointer: coarse)").matches && window.matchMedia("(hover: none)").matches;
+  return phone || ipad || coarse;
+}
+
+function waitForContainerSize(container, tries, done) {
+  var ready = container.clientWidth >= 80 && container.clientHeight >= 160;
+  if (ready || tries >= 30) {
+    done();
+    return;
+  }
+  window.setTimeout(function () {
+    waitForContainerSize(container, tries + 1, done);
+  }, 50);
+}
+
+function createWidget(container, mobile) {
+  var libraryPath = (window.QuietAlphaChartConfig && window.QuietAlphaChartConfig.libraryPath)
+      || "/resources/js/charting_library/";
+  var symbols = dummySymbols();
+  var datafeed = createDummyDatafeed(symbols);
+  var disabled = ["header_saveload", "use_localstorage_for_settings"];
+  var options = {
+    symbol: "AAPL",
+    interval: "1D",
+    container: container,
+    datafeed: datafeed,
+    library_path: libraryPath,
+    locale: "kr",
+    timezone: "Asia/Seoul",
+    autosize: true,
+    enabled_features: [
+      "show_spread_operators",
+      "compare_symbol_search_spread_operators",
+      "custom_resolutions",
+      "hide_left_toolbar_by_default"
+    ],
+    disabled_features: disabled,
+    overrides: {
+      "mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker-and-description"
+    },
+    symbol_search_request_delay: 500,
+    custom_formatters: {
+      dateFormatter: {
+        format: function (date) {
+          return date.getUTCFullYear() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCDate();
+        }
+      },
+      tickMarkFormatter: function (date, tickMarkType) {
+        switch (tickMarkType) {
+          case "Year":
+            return date.getUTCFullYear() + "년";
+          case "Month":
+            return date.getUTCMonth() + 1 + "월";
+          case "DayOfMonth":
+            return date.getUTCDate() + "일";
+          case "Time":
+            return date.getUTCHours() + ":" + date.getUTCMinutes();
+          case "TimeWithSeconds":
+            return date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
+          default:
+            return "";
+        }
+      }
+    }
+  };
+
+  if (mobile) {
+    disabled.push("left_toolbar", "header_compare", "header_screenshot", "header_undo_redo");
+    options.header_widget_buttons_mode = "compact";
+    options.width = Math.max(container.clientWidth, 280);
+    options.height = Math.max(container.clientHeight, 360);
+  }
+
+  window.tvWidget = new TradingView.widget(options);
+  window.tvWidget.onChartReady(function () {
+    var iframe = container.querySelector("iframe");
+    if (iframe) {
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+    }
+  });
+}
 
 function dummySymbols() {
   return [

@@ -1,3 +1,5 @@
+pom.xml
+
 # Maven build
 target/
 
@@ -23,3 +25,4 @@ application-secret.properties
 Thumbs.db
 *.ps1
 *.cmd
+
