@@ -1,0 +1,412 @@
+﻿<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="charting_library/charting_library.standalone.js"></script>
+<script src="datafeeds/udf/dist/bundle.js"></script>
+<script>
+	var symbolTypeList;
+	var assetClsfCd;
+	var saveUserId;
+	var userIp;
+	var symbolExList;
+	var menuId;	
+	var cnt = 0;
+	var beforeResolution = "";
+	var beforeTicker = "";
+	
+	//전달받은 심볼타입 데이터 변환
+	function convertSymbolTypeData(data) {
+		var symbolTypeArr = new Array();
+		var symbolType = new Object();
+		symbolType.name = "ALL";
+		symbolType.value = "";
+		symbolTypeArr.push(symbolType);
+
+		for(var i=0; i<data.length; i++) {
+			var symbolTypeCd = data[i][0];
+			var symbolTypeNm = data[i][1];
+			
+			symbolType = new Object();
+			symbolType.name = symbolTypeNm;
+			symbolType.value = symbolTypeCd;
+			
+			symbolTypeArr.push(symbolType);
+		}
+
+		return symbolTypeArr;
+	}
+	
+	//전달받은 심볼원천지데이터 변환
+	function convertSymbolExData(data) {
+		var symbolExArr = new Array();
+		var symbolEx = new Object();
+		symbolEx.value = "";
+		symbolEx.name = "All Exchanges";
+		symbolEx.desc = "";
+		symbolExArr.push(symbolEx);
+
+		for(var i=0; i<data.length; i++) {
+			var symbolExCd = data[i][0];
+			
+			symbolEx = new Object();
+			symbolEx.name = symbolExCd;
+			symbolEx.value = symbolExCd;
+			symbolEx.desc = symbolExCd;
+			
+			symbolExArr.push(symbolEx);
+		}
+
+		return symbolExArr;
+	}
+	
+	//BIMatrix 리포트에서 호출되는 메소드
+	function init(initData) {
+		userIp = initData.userIp;
+		saveUserId = initData.userId;
+		assetClsfCd = initData.assetClsfCd;
+		menuId = initData.menuId;
+		symbolExList = convertSymbolExData(initData.symbolExArray);
+		symbolTypeList = convertSymbolTypeData(initData.symbolTypeArray);
+		initOnReady(symbolTypeList);
+	};
+	
+	//트레이딩뷰 차트 그리기
+	function initOnReady(symbolTypeList) {
+	
+		searchSymbol = " ";
+
+		const datafeedInfo = {
+			onReady: (callback) => {
+				setTimeout(() => callback(configurationData));
+				//console.log('[onReady]: Method call', configurationData);
+			},
+			
+			searchSymbols: async (userInput, exchange, symbolType, onSearchSymbolsCallback,) => {
+				//console.log('[searchSymbols]: Method call');
+						
+				var searchFormData = new URLSearchParams();
+				searchFormData.append('symbolNm', userInput);
+				searchFormData.append('exchange', exchange);
+				searchFormData.append('symbolType', symbolType);
+				searchFormData.append('assetClsfCd', assetClsfCd);
+							
+				const response = await fetch('/matrix/intlportal/tradingView/charts/searchRealTimeSymbol.jsp', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded', // Sending URL-encoded form data
+					},
+					body: searchFormData
+				});
+			
+				const data = await response.json();
+				onSearchSymbolsCallback(data);
+			},
+			
+			resolveSymbol: (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
+				//console.log('[resolveSymbol]: Method call');
+				// 서버로부터 심볼 정보를 가져옴
+				var searchFormData = new URLSearchParams();
+				searchFormData.append('symbol', symbolName);
+				searchFormData.append('isRealTime', 'Y');
+
+				fetch('/matrix/intlportal/tradingView/charts/getRealTimeSymbolInfo.jsp', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded', // URL 인코딩된 데이터 전송
+					},
+					body: searchFormData
+				})
+				.then(response => {
+					if (!response.ok) {
+				throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.status == "success") {
+						onSymbolResolvedCallback(data.data); // 심볼 정보가 성공적으로 반환되었을 경우
+					} else {
+						onResolveErrorCallback(data.message);
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					onResolveErrorCallback(error); // 오류 발생 시 처리
+				});
+			},
+			
+			getBars: (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
+				//console.log('[getBars]: Method call');
+				var searchFormData = new URLSearchParams();
+				searchFormData.append('symbol', symbolInfo.ticker);
+				searchFormData.append('from', periodParams.from);
+				searchFormData.append('to', periodParams.to);
+				searchFormData.append('assetClsfCd', assetClsfCd);
+				searchFormData.append('isRealTime', 'Y');
+
+				if(beforeTicker != symbolInfo.ticker) {
+					cnt = 0;
+				}
+				
+				if(beforeResolution != resolution) {
+					cnt = 0;
+				}
+				
+				if(cnt > 0) {
+					onHistoryCallback([], { noData: true });
+				}else {
+				
+					beforeTicker = symbolInfo.ticker;
+					beforeResolution = resolution;
+					cnt = 1;
+					
+					fetch('/matrix/intlportal/tradingView/datafeeds/realTimeDatafeed.jsp', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded', // Sending URL-encoded form data
+						},
+						body: searchFormData
+
+					})
+					.then(response => response.json())
+					.then(data => {
+						if(data.status == "success") {
+					onHistoryCallback(data.data, { noData: false });
+						}else if(data.status == "nextData") {
+					onHistoryCallback([], { nextTime: data.nextTime });
+						}else {
+					onHistoryCallback([], { noData: true });
+						}
+					}).catch(err => {
+						 console.error('Error:', err);
+						 onErrorCallback(err);
+					});
+				}
+				
+			},
+
+			subscribeBars: (symbolInfo, resolution, onRealTimeCallback, subscribeUID, onResetCacheNeededCallback) => {
+			},
+
+			unsubscribeBars: (subscriberUID) => {
+			},
+
+		};	
+
+		const configurationData = {
+			// Represents the resolutions for bars supported by your datafeed
+			supported_resolutions: ['10', '30', '1D', '1W', '1M', '12M'],
+			// The `exchanges` arguments are used for the `searchSymbols` method if a user selects the exchange
+			exchanges: symbolExList,
+			// The `symbols_types` arguments are used for the `searchSymbols` method if a user selects this symbol type
+			symbols_types: symbolTypeList
+		};
+
+		var widget = window.tvWidget = new TradingView.widget({
+			//charts_storage_url : "https://saveload.tradingview.com",
+		  
+			//charts_storage_api_version: "1.1",
+			
+			client_id : menuId,
+		  
+			user_id: saveUserId,
+		  
+			//차트의 크기 -> 페이지의 모든 공간을 차지하도록 설정
+			fullscreen: true,
+			
+			//심볼 데이터 설정
+			symbol: searchSymbol,
+
+			//단일 막대 주기 설정
+			interval: "10",
+		  
+			//표시될 컨테이너 ID
+			container: "tv_chart_container",
+		  
+			//차트 데이터 제공하는 부분
+			datafeed : datafeedInfo,
+		  
+			//라이브러리가 포함된 폴더의 경로
+			library_path:"../tradingView/charting_library/",
+
+			//차트 타임존 설정
+			timezone : "Asia/Korea",
+			
+			locale : 'kr',
+		  
+			//특정 요소 표시하기
+			enabled_features: ["custom_resolutions"],
+			overrides: {
+				"mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker-and-description",
+			},
+			//심볼 검색 딜레이 설정
+			symbol_search_request_delay : 500,
+			
+			//서버에서 저장된 차트 레이아웃 리스트를 통해 기존 레이아웃 형태로 표시 가능
+			save_load_adapter : {
+				charts : [],
+				studyTemplates : [],
+				drawingTemplates : [],
+					
+				//서버에 저장된 레이아웃 목록 표시(Load Layout 아이콘 클릭 시 호출)
+				getAllCharts : function() {
+					//console.log('Get All Charts');
+					
+					var searchFormData = new URLSearchParams();
+					searchFormData.append('userId', saveUserId);
+					searchFormData.append('menuId', menuId);
+					
+					return fetch('/matrix/intlportal/tradingView/charts/getAllCharts.jsp', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded', // Sending URL-encoded form data
+						},
+						body: searchFormData
+					})
+					.then(response => response.json())
+					.then(charts => {
+						charts.forEach(chart => {
+							chart.timestamp = chart.timestamp/1000;
+							this.charts.push(chart);
+						});
+						return charts;
+					})
+					.catch(err => {
+						console.error('Error:', err);
+					});
+				},
+				
+				//레이아웃 삭제
+				removeChart : function(chartId) {
+					//console.log('Remove Chart:::' + chartId);
+					// 특정 차트를 삭제하는 로직 구현
+					var searchFormData = new URLSearchParams();
+					searchFormData.append('chartId', chartId);
+					searchFormData.append('userId', saveUserId);
+					searchFormData.append('menuId', menuId);
+					
+					return fetch('/matrix/intlportal/tradingView/charts/removeChart.jsp', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded', // Sending URL-encoded form data
+						},
+						body: searchFormData
+					})
+					.then(response => response.json())
+					.catch(err => {
+						console.error('Error:', err);
+					});
+				},
+				
+				//레이아웃 저장
+				saveChart : function(chartData) {
+					//console.log('Save Chart');
+					
+					if(!chartData.id) {
+						chartData.id = "";
+						chartData.chart_type = "I";
+					}else {
+						//레이아웃 저장 후 LoadLayout 없이 바로 재저장하는 경우
+						if(typeof chartData.id == 'object') {
+							chartData.id = chartData.id.id.toString();
+						//레이아웃 로드 후 수정하는 경우
+						}else {
+							chartData.id = chartData.id.toString();
+						}
+						chartData.chart_type = "U";
+					}
+					
+					chartData.timestamp = new Date().valueOf();
+					chartData.user_id = saveUserId;
+					chartData.menu_id = menuId;
+					chartData.content = JSON.stringify(chartData);
+
+					// 차트를 저장하는 로직 구현
+					return fetch('/matrix/intlportal/tradingView/charts/saveLoadChart.jsp', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(chartData)
+					})
+					.then(response => response.json())
+					.catch(err => {
+						console.error('Error:', err);
+					});
+				},
+				
+				//다른 차트로 전환될 때 호출
+				getChartContent : async function(chartId, callback) {
+					//console.log('Get One Chart');
+					var chartData = {"id" : chartId, "chart_type" : "S", "user_id" : saveUserId, "menu_id" : menuId};
+					try {
+						const response = await fetch('/matrix/intlportal/tradingView/charts/saveLoadChart.jsp', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(chartData)
+						});
+						
+						const data = await response.json();
+						return data.content;
+					} catch (err) {
+						console.error('Error:', err);
+						throw err;  // 에러 발생 시 에러를 던짐
+					}
+				},
+
+				//서버에 저장된 템플릿 목록 표시(템플릿 아이콘 클릭 시 호출)
+				getAllStudyTemplates : function() {
+				  //console.log('Get All Templates');
+				  return Promise.resolve(this.studyTemplates);
+				},
+				removeStudyTemplate : function() {
+				  //console.log('Remove Templates');
+				},
+				saveStudyTemplate : function() {
+				  //console.log('Save Templates');
+				},
+				getStudyTemplateContent : function() {
+				  //console.log('Get One Templates');
+				},
+			},
+			
+			//시간 및 가격 형식 지정
+			custom_formatters : {
+				//마우스 오버 시, 날짜형식 지정 (default 일,월,연도)
+				dateFormatter : {
+					format : (date) => {
+						return date.getUTCFullYear() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCDate();
+					}
+				},
+
+				//시간 축에서 직접 날짜 형식 지정 (default 시간축 3글자 영문 표시)
+				tickMarkFormatter : (date, tickMarkType) => {
+					switch(tickMarkType) {
+						case 'Year' : 
+							return date.getUTCFullYear() + '년';
+						case 'Month' : 
+							return (date.getUTCMonth() +1) + '월';
+						case 'DayOfMonth' : 
+							return date.getUTCDate() + '일';
+						case 'Time' : 
+							return date.getUTCHours() + ':' + String(date.getUTCMinutes()).padStart(2, '0'); // 2자리 분
+						case 'TimeWithSeconds' : 
+							return date.getUTCHours() + ':' + String(date.getUTCMinutes()).padStart(2, '0') + ':' + String(date.getUTCSeconds()).padStart(2, '0'); 
+					}
+					throw new Error('unhandled tick mark type ' + tickMarkType);
+				},
+			},
+		});
+	};
+</script>
+
+</head>
+<body style="margin:0;">
+	<div id="tv_chart_container"></div>
+</body>
+</html>

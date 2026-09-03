@@ -19,6 +19,16 @@
         <jetty.http.port>8081</jetty.http.port>
     </properties>
 
+    <!-- Maven Central에 없는 JAR은 lib-repo 에 넣고 아래처럼 의존성을 추가합니다.
+         설치 예:
+         mvn install:install-file -Dfile=경로/라이브러리.jar -DgroupId=com.vendor -DartifactId=이름 -Dversion=1.0.0 -Dpackaging=jar -DlocalRepositoryPath=lib-repo -->
+    <repositories>
+        <repository>
+            <id>project-lib</id>
+            <url>file://${project.basedir}/lib-repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>

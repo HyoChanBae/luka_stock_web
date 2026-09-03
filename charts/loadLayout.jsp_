@@ -1,0 +1,65 @@
+﻿<%@page import="org.json.simple.*"%>
+<%@page import="java.util.*"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.regex.Matcher"%>
+<%@page import="java.util.regex.Pattern"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+
+	request.setCharacterEncoding("UTF-8");
+	
+	String userId = request.getParameter("userId");
+	String menuId = request.getParameter("menuId");
+	String saveData = request.getParameter("saveData");
+
+	Connection conn = null;
+	String url = "jdbc:oracle:thin:@172.16.79.101:1521:SCM";
+	String user = "mias";
+	String password = "picm#ias2";
+	String driver = "oracle.jdbc.driver.OracleDriver";
+	ResultSet rs = null;
+	PreparedStatement pstmt = null;
+		
+	try{		
+        Class.forName(driver);
+        conn = DriverManager.getConnection(url, user, password);
+		String inSymbol = "";
+
+		String 	wSql  = "	SELECT CHART_DATA FROM TEST_LAYOUT 	";
+				wSql +=	"	WHERE 1=1									";
+				wSql += "	AND USER_ID = ?								";
+				wSql += "	AND MENU_ID = ?								";
+		
+        pstmt = conn.prepareStatement(wSql);
+		pstmt.setString(1, userId);
+		pstmt.setString(2, menuId);
+		rs = pstmt.executeQuery();
+        
+		String loadLayout = "";
+		while(rs.next()) {
+			loadLayout = rs.getString("CHART_DATA");
+        }
+        
+		pstmt.close();
+        conn.close();
+		
+		out.println(loadLayout);
+		
+    }catch(Exception e){
+		out.println("ERROR:::" + e.getMessage());
+    }finally{
+        try{
+            if(pstmt != null)   pstmt.close();
+            if(conn != null) conn.close();
+        }catch(Exception ex) {
+            out.println("ERROR:::" + ex.getMessage());
+        }
+    }
+	
+%>

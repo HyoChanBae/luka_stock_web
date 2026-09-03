@@ -1,5 +1,6 @@
 -- QuietAlpha 봇 랭킹 / 거래내역
 -- Database: DEMO_RAW_DB  Schema: RAW
+-- 샘플 데이터는 bot_seed.sql 을 한 번만 실행하세요. 앱 기동 시 자동 insert 하지 않습니다.
 
 CREATE TABLE IF NOT EXISTS DEMO_RAW_DB.RAW.BOT (
     BOT_ID          NUMBER AUTOINCREMENT START 1 INCREMENT 1,

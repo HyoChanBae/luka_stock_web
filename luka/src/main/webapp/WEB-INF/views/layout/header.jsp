@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/layout.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/components.css'/>"/>
 </head>
-<body>
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''}">
 <div class="app">
     <aside>
         <div class="brand">Quiet<span>Alpha</span></div>
@@ -25,8 +25,14 @@
             <a href="<c:url value='/scenario'/>" class="${activeNav eq 'scenario' ? 'active' : ''}">
                 <span class="ico">＋</span>내 투자 시나리오
             </a>
-            <a href="<c:url value='/report'/>" class="${activeNav eq 'report' ? 'active' : ''}">
+            <a href="<c:url value='/daily-report'/>" class="${activeNav eq 'daily-report' ? 'active' : ''}">
                 <span class="ico">▤</span>일일 리포트
+            </a>
+            <a href="<c:url value='/chart'/>" class="${activeNav eq 'chart' ? 'active' : ''}">
+                <span class="ico">◈</span>차트
+            </a>
+            <a href="<c:url value='/report'/>" class="${activeNav eq 'report' ? 'active' : ''}">
+                <span class="ico">▤</span>리포트 알림
             </a>
             <a href="<c:url value='/alerts'/>" class="${activeNav eq 'alerts' ? 'active' : ''}">
                 <span class="ico">◎</span>알림 전략

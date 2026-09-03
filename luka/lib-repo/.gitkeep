@@ -1,0 +1,2 @@
+# Maven Central에 없는 JAR을 두는 로컬 저장소입니다.
+# 비어 있어도 됩니다. JAR을 넣은 뒤에 pom.xml <dependency>를 추가하세요.

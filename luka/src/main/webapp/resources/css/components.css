@@ -58,6 +58,89 @@
   font-size: 14px;
 }
 
+.report-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #1f2937;
+}
+
+.report-card-title {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  color: #20242a;
+}
+
+.report-date {
+  margin: 11px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748b;
+}
+
+.report-sections {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  margin-top: 28px;
+}
+
+.report-section {
+  background: #f9fafb;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px 22px 20px;
+  min-width: 0;
+}
+
+.report-section h4 {
+  margin: 0 0 16px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  line-height: 1.4;
+  color: #20242a;
+}
+
+.report-item {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.report-item + .report-item {
+  margin-top: 1px;
+}
+
+.page-daily-report .title h1 {
+  font-size: clamp(32px, 3.4vw, 36px);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.page-chart .chart-card,
+.page-daily-report .chart-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.page-chart #tv_chart_container {
+  height: calc(100vh - 210px);
+  min-height: 560px;
+}
+
+.page-daily-report #tv_chart_container {
+  height: calc(100vh - 150px);
+  min-height: 720px;
+}
+
 .hrow {
   display: flex;
   justify-content: space-between;
@@ -588,6 +671,20 @@
 
   .hero-chart {
     height: 180px;
+  }
+
+  .report-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .page-chart #tv_chart_container {
+    height: calc(100vh - 280px);
+    min-height: 420px;
+  }
+
+  .page-daily-report #tv_chart_container {
+    height: calc(100vh - 220px);
+    min-height: 520px;
   }
 }
 

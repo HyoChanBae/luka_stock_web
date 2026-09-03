@@ -14,10 +14,6 @@ import java.util.List;
 @Repository
 public class BotRepository {
 
-    private static final String BOT = "DEMO_RAW_DB.RAW.BOT";
-    private static final String PERF = "DEMO_RAW_DB.RAW.BOT_PERF_DAILY";
-    private static final String TRADE = "DEMO_RAW_DB.RAW.BOT_TRADE";
-
     private final JdbcTemplate jdbcTemplate;
 
     public BotRepository(JdbcTemplate jdbcTemplate) {
@@ -60,33 +56,36 @@ public class BotRepository {
                 """);
     }
 
-    public int countBots() {
-        Number count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + BOT, Number.class);
-        return count == null ? 0 : count.intValue();
-    }
-
     public List<BotRank> findLeague() {
         return jdbcTemplate.query(
                 """
-                WITH latest AS (
-                    SELECT BOT_ID, MAX(PERF_DATE) AS PERF_DATE
-                    FROM DEMO_RAW_DB.RAW.BOT_PERF_DAILY
-                    GROUP BY BOT_ID
-                )
                 SELECT
-                    ROW_NUMBER() OVER (ORDER BY p.CUM_RETURN DESC NULLS LAST) AS RANK_NO,
-                    b.BOT_ID,
-                    b.BOT_CODE,
-                    b.BOT_NAME,
-                    b.DESCRIPTION,
-                    b.MODEL_TYPE,
-                    p.DAILY_RETURN,
-                    p.CUM_RETURN
-                FROM DEMO_RAW_DB.RAW.BOT b
-                JOIN latest l ON l.BOT_ID = b.BOT_ID
-                JOIN DEMO_RAW_DB.RAW.BOT_PERF_DAILY p
-                    ON p.BOT_ID = l.BOT_ID AND p.PERF_DATE = l.PERF_DATE
-                WHERE b.IS_ACTIVE = 'Y'
+                    ROW_NUMBER() OVER (ORDER BY CUM_RETURN DESC NULLS LAST) AS RANK_NO,
+                    BOT_ID,
+                    BOT_CODE,
+                    BOT_NAME,
+                    DESCRIPTION,
+                    MODEL_TYPE,
+                    DAILY_RETURN,
+                    CUM_RETURN
+                FROM (
+                    SELECT
+                        b.BOT_ID,
+                        b.BOT_CODE,
+                        b.BOT_NAME,
+                        b.DESCRIPTION,
+                        b.MODEL_TYPE,
+                        p.DAILY_RETURN,
+                        p.CUM_RETURN
+                    FROM DEMO_RAW_DB.RAW.BOT b
+                    JOIN DEMO_RAW_DB.RAW.BOT_PERF_DAILY p
+                        ON p.BOT_ID = b.BOT_ID
+                    WHERE b.IS_ACTIVE = 'Y'
+                    QUALIFY ROW_NUMBER() OVER (
+                        PARTITION BY b.BOT_CODE
+                        ORDER BY p.PERF_DATE DESC, b.BOT_ID
+                    ) = 1
+                ) league
                 ORDER BY RANK_NO
                 """,
                 (rs, i) -> new BotRank(
@@ -141,9 +140,25 @@ public class BotRepository {
     ) {
         jdbcTemplate.update(
                 """
-                INSERT INTO DEMO_RAW_DB.RAW.BOT
+                MERGE INTO DEMO_RAW_DB.RAW.BOT t
+                USING (
+                    SELECT
+                        ? AS BOT_CODE,
+                        ? AS BOT_NAME,
+                        ? AS DESCRIPTION,
+                        ? AS MODEL_TYPE,
+                        ? AS STRATEGY_TYPE
+                ) s
+                ON t.BOT_CODE = s.BOT_CODE
+                WHEN MATCHED THEN UPDATE SET
+                    BOT_NAME = s.BOT_NAME,
+                    DESCRIPTION = s.DESCRIPTION,
+                    MODEL_TYPE = s.MODEL_TYPE,
+                    STRATEGY_TYPE = s.STRATEGY_TYPE
+                WHEN NOT MATCHED THEN INSERT
                     (BOT_CODE, BOT_NAME, DESCRIPTION, MODEL_TYPE, STRATEGY_TYPE)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES
+                    (s.BOT_CODE, s.BOT_NAME, s.DESCRIPTION, s.MODEL_TYPE, s.STRATEGY_TYPE)
                 """,
                 code, name, description, modelType, strategyType
         );
