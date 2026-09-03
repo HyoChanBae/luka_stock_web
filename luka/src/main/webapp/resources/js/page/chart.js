@@ -59,6 +59,7 @@ function createWidget(container, mobile) {
     ],
     disabled_features: disabled,
     overrides: {
+      "mainSeriesProperties.style": 2,
       "mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker-and-description"
     },
     symbol_search_request_delay: 500,
@@ -96,6 +97,7 @@ function createWidget(container, mobile) {
 
   window.tvWidget = new TradingView.widget(options);
   window.tvWidget.onChartReady(function () {
+    window.tvWidget.activeChart().setChartType(2);
     var iframe = container.querySelector("iframe");
     if (iframe) {
       iframe.style.width = "100%";

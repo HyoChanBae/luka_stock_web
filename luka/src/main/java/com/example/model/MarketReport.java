@@ -79,12 +79,9 @@ public class MarketReport {
     }
 
     private static void flush(List<MarketReportSection> sections, String title, List<String> items) {
-        if ((title == null || title.isBlank()) && items.isEmpty()) {
+        if (title == null || title.isBlank() || items.isEmpty()) {
             return;
         }
-        sections.add(new MarketReportSection(
-                title == null || title.isBlank() ? "리포트" : title,
-                List.copyOf(items)
-        ));
+        sections.add(new MarketReportSection(title, List.copyOf(items)));
     }
 }

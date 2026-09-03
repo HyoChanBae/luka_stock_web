@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/base.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/layout.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/components.css'/>"/>
+    <c:if test="${activeNav eq 'daily-report-final'}">
+        <link rel="stylesheet" href="<c:url value='/resources/css/report-final.css'/>"/>
+    </c:if>
 </head>
-<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''}">
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''}">
 <div class="app">
     <aside>
         <div class="brand">Quiet<span>Alpha</span></div>
@@ -27,6 +30,9 @@
             </a>
             <a href="<c:url value='/daily-report'/>" class="${activeNav eq 'daily-report' ? 'active' : ''}">
                 <span class="ico">▤</span>일일 리포트
+            </a>
+            <a href="<c:url value='/daily-report-final'/>" class="${activeNav eq 'daily-report-final' ? 'active' : ''}">
+                <span class="ico">▤</span>일일 리포트 최종
             </a>
             <a href="<c:url value='/chart'/>" class="${activeNav eq 'chart' ? 'active' : ''}">
                 <span class="ico">◈</span>차트
