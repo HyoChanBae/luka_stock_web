@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="<c:url value='/resources/css/report-final.css'/>"/>
     </c:if>
 </head>
-<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''}">
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''}">
 <div class="app">
     <aside>
         <div class="brand">Quiet<span>Alpha</span></div>

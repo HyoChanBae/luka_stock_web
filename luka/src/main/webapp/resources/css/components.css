@@ -439,9 +439,9 @@ body.touch-chart.page-daily-report #tv_chart_container {
 
 .bot-rank {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1.6fr) .7fr .8fr .8fr .7fr;
+  grid-template-columns: 120px minmax(0, 1.6fr) .7fr .4fr .8fr .7fr;
   gap: 12px;
-  align-items: center;
+  align-items: stretch;
   padding: 14px 0;
   border-bottom: 1px solid var(--line);
   font-size: 13px;
@@ -463,6 +463,10 @@ body.touch-chart.page-daily-report #tv_chart_container {
   padding-bottom: 10px;
 }
 
+.bot-rank-head > :nth-child(2) {
+  padding-left: 50px;
+}
+
 .bot-rank:last-child {
   border-bottom: 0;
 }
@@ -470,15 +474,76 @@ body.touch-chart.page-daily-report #tv_chart_container {
 .rank {
   font-size: 17px;
   font-weight: 900;
+  line-height: 1.2;
+  height: 100%;
+}
+
+.bot-rank > :first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 24px;
+}
+
+.botname {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-top: 8px;
+}
+
+.bot-rank > *:not(:first-child):not(.botname) {
+  display: flex;
+  align-items: center;
+}
+
+.bot-rank > :nth-child(3),
+.bot-rank > :nth-child(4),
+.bot-rank > :nth-child(5) {
+  justify-content: center;
+  text-align: center;
 }
 
 .botname b {
   display: block;
+  line-height: 1.2;
 }
 
 .botname span {
   color: var(--muted);
   font-size: 11px;
+}
+
+.page-bots .title p {
+  font-size: 16px;
+  color: #333d4b;
+}
+
+.page-bots .hrow .small {
+  font-size: 15px;
+  color: #333d4b;
+}
+
+.page-bots .bot-rank {
+  font-size: 18px;
+}
+
+.page-bots .bot-rank-head {
+  font-size: 17px;
+}
+
+.page-bots .rank {
+  font-size: 20px;
+}
+
+.page-bots .botname span {
+  font-size: 14px;
+  color: #4e5968;
+}
+
+.page-bots .link {
+  font-size: 15px;
 }
 
 .perf {
@@ -793,7 +858,7 @@ body.touch-chart.page-daily-report #tv_chart_container {
   }
 
   .bot-rank {
-    grid-template-columns: 32px minmax(0, 1.2fr) .8fr auto;
+    grid-template-columns: 48px minmax(0, 1.2fr) .8fr auto;
   }
 
   .bot-rank > *:nth-child(3),
