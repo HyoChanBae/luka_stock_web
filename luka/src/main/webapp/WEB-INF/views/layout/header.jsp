@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="<c:url value='/resources/css/report-final.css'/>"/>
     </c:if>
 </head>
-<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''}">
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' or activeNav eq 'daily-trading-report' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''}">
 <div class="app">
     <aside>
         <div class="brand">Quiet<span>Alpha</span></div>
@@ -30,6 +30,9 @@
             </a>
             <a href="<c:url value='/daily-report'/>" class="${activeNav eq 'daily-report' ? 'active' : ''}">
                 <span class="ico">▤</span>일일 리포트
+            </a>
+            <a href="<c:url value='/daily-trading-report'/>" class="${activeNav eq 'daily-trading-report' ? 'active' : ''}">
+                <span class="ico">◈</span>일일 트레이딩 리포트
             </a>
             <a href="<c:url value='/daily-report-final'/>" class="${activeNav eq 'daily-report-final' ? 'active' : ''}">
                 <span class="ico">▤</span>일일 리포트 최종

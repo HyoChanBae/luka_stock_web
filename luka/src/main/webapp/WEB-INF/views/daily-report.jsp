@@ -37,7 +37,7 @@
     <div class="card span12 chart-card">
       <div id="tv_chart_container">
         <iframe
-            src="http://localhost:4751/chart"
+            src="http://localhost:4751/chart-all"
             title="트레이딩뷰 차트"
             style="width:100%;height:100%;border:0;"
         ></iframe>
@@ -45,6 +45,7 @@
     </div>
 </section>
 
+<%--
 <script src="${pageContext.request.contextPath}/resources/js/charting_library/charting_library.standalone.js"></script>
 <script>
     window.QuietAlphaChartConfig = {
@@ -52,5 +53,6 @@
     };
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/page/chart.js"></script>
+--%>
 
 <%@ include file="/WEB-INF/views/layout/footer.jsp" %>
