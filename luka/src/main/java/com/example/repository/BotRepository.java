@@ -48,6 +48,7 @@ public class BotRepository {
                     TRADE_ID        NUMBER AUTOINCREMENT START 1 INCREMENT 1,
                     BOT_ID          NUMBER NOT NULL,
                     SYMBOL          VARCHAR(100) NOT NULL,
+                    SYMBOL_NAME     VARCHAR(200),
                     SELECT_REASON   VARCHAR(1000),
                     BUY_PRICE       NUMBER(18, 4),
                     BUY_AT          TIMESTAMP_NTZ NOT NULL,
@@ -111,7 +112,7 @@ public class BotRepository {
     public List<BotTrade> findTrades(long botId) {
         return jdbcTemplate.query(
                 """
-                SELECT TRADE_ID, BOT_ID, SYMBOL, SELECT_REASON, BUY_PRICE, BUY_AT
+                SELECT TRADE_ID, BOT_ID, SYMBOL, SYMBOL_NAME, SELECT_REASON, BUY_PRICE, BUY_AT
                 FROM DEMO_RAW_DB.RAW.BOT_TRADE
                 WHERE BOT_ID = ?
                 ORDER BY BUY_AT DESC
@@ -122,6 +123,7 @@ public class BotRepository {
                             rs.getLong("TRADE_ID"),
                             rs.getLong("BOT_ID"),
                             rs.getString("SYMBOL"),
+                            rs.getString("SYMBOL_NAME"),
                             rs.getString("SELECT_REASON"),
                             toDouble(rs.getObject("BUY_PRICE")),
                             buyAt == null ? null : buyAt.toLocalDateTime()
@@ -195,6 +197,7 @@ public class BotRepository {
     public void insertTrade(
             long botId,
             String symbol,
+            String symbolName,
             String selectReason,
             Double buyPrice,
             LocalDateTime buyAt
@@ -202,11 +205,12 @@ public class BotRepository {
         jdbcTemplate.update(
                 """
                 INSERT INTO DEMO_RAW_DB.RAW.BOT_TRADE
-                    (BOT_ID, SYMBOL, SELECT_REASON, BUY_PRICE, BUY_AT)
-                VALUES (?, ?, ?, ?, ?)
+                    (BOT_ID, SYMBOL, SYMBOL_NAME, SELECT_REASON, BUY_PRICE, BUY_AT)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 botId,
                 symbol,
+                symbolName,
                 selectReason,
                 buyPrice,
                 Timestamp.valueOf(buyAt)

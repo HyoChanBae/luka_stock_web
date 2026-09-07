@@ -13,6 +13,7 @@ public class BotTrade {
     private final long tradeId;
     private final long botId;
     private final String symbol;
+    private final String symbolName;
     private final String selectReason;
     private final Double buyPrice;
     private final LocalDateTime buyAt;
@@ -21,6 +22,7 @@ public class BotTrade {
             long tradeId,
             long botId,
             String symbol,
+            String symbolName,
             String selectReason,
             Double buyPrice,
             LocalDateTime buyAt
@@ -28,6 +30,7 @@ public class BotTrade {
         this.tradeId = tradeId;
         this.botId = botId;
         this.symbol = symbol;
+        this.symbolName = symbolName;
         this.selectReason = selectReason;
         this.buyPrice = buyPrice;
         this.buyAt = buyAt;
@@ -43,6 +46,10 @@ public class BotTrade {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public String getSymbolName() {
+        return symbolName;
     }
 
     public String getSelectReason() {

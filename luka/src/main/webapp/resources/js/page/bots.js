@@ -64,7 +64,7 @@ function render(body, trades) {
 
   var head = document.createElement("div");
   head.className = "trade-row trade-head";
-  ["종목", "종목 선정 이유", "구매단가", "구매일시"].forEach(function (label) {
+  ["종목명", "종목코드", "종목 선정 이유", "구매단가", "구매일시"].forEach(function (label) {
     var col = document.createElement("div");
     col.textContent = label;
     head.appendChild(col);
@@ -75,10 +75,13 @@ function render(body, trades) {
     var row = document.createElement("div");
     row.className = "trade-row";
 
+    var name = document.createElement("div");
+    var nameStrong = document.createElement("b");
+    nameStrong.textContent = trade.symbolName || "—";
+    name.appendChild(nameStrong);
+
     var symbol = document.createElement("div");
-    var strong = document.createElement("b");
-    strong.textContent = trade.symbol || "";
-    symbol.appendChild(strong);
+    symbol.textContent = trade.symbol || "—";
 
     var reason = document.createElement("div");
     reason.className = "small";
@@ -90,6 +93,7 @@ function render(body, trades) {
     var when = document.createElement("div");
     when.textContent = trade.buyAtDisplay || "—";
 
+    row.appendChild(name);
     row.appendChild(symbol);
     row.appendChild(reason);
     row.appendChild(price);

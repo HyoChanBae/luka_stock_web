@@ -49,7 +49,14 @@ public class BotService {
         botRepository.upsertPerformance(botId, perfDate, dailyReturn, cumReturn);
     }
 
-    public void addTrade(long botId, String symbol, String selectReason, Double buyPrice, LocalDateTime buyAt) {
-        botRepository.insertTrade(botId, symbol, selectReason, buyPrice, buyAt);
+    public void addTrade(
+            long botId,
+            String symbol,
+            String symbolName,
+            String selectReason,
+            Double buyPrice,
+            LocalDateTime buyAt
+    ) {
+        botRepository.insertTrade(botId, symbol, symbolName, selectReason, buyPrice, buyAt);
     }
 }

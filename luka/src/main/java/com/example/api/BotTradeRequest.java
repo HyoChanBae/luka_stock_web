@@ -3,6 +3,7 @@ package com.example.api;
 public class BotTradeRequest {
 
     private String symbol;
+    private String symbolName;
     private String selectReason;
     private Double buyPrice;
     private String buyAt;
@@ -13,6 +14,14 @@ public class BotTradeRequest {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getSymbolName() {
+        return symbolName;
+    }
+
+    public void setSymbolName(String symbolName) {
+        this.symbolName = symbolName;
     }
 
     public String getSelectReason() {

@@ -83,6 +83,7 @@ public class BotApiController {
         botService.addTrade(
                 botId,
                 request.getSymbol(),
+                request.getSymbolName(),
                 request.getSelectReason(),
                 request.getBuyPrice(),
                 parseDateTime(request.getBuyAt())
