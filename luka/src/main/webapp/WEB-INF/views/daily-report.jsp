@@ -31,8 +31,17 @@
             </c:otherwise>
         </c:choose>
     </div>
-    <div class="card span12 chart-card">
+<%--<div class="card span12 chart-card">
         <div id="tv_chart_container"></div>
+    </div> --%>
+    <div class="card span12 chart-card">
+      <div id="tv_chart_container">
+        <iframe
+            src="http://localhost:3000/chart"
+            title="트레이딩뷰 차트"
+            style="width:100%;height:100%;border:0;"
+        ></iframe>
+      </div>
     </div>
 </section>
 
