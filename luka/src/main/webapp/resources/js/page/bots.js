@@ -64,7 +64,7 @@ function render(body, trades) {
 
   var head = document.createElement("div");
   head.className = "trade-row trade-head";
-  ["종목명", "종목코드", "종목 선정 이유", "구매단가", "구매일시"].forEach(function (label) {
+  ["종목명", "종목코드", "종목 선정 이유", "구매단가", "현재가", "등락률", "구매일시"].forEach(function (label) {
     var col = document.createElement("div");
     col.textContent = label;
     head.appendChild(col);
@@ -90,6 +90,15 @@ function render(body, trades) {
     var price = document.createElement("div");
     price.textContent = trade.buyPriceDisplay || "—";
 
+    var last = document.createElement("div");
+    last.textContent = trade.lastPriceDisplay || "—";
+
+    var change = document.createElement("div");
+    change.textContent = trade.changePctDisplay || "—";
+    if (trade.changeClass) {
+      change.className = trade.changeClass;
+    }
+
     var when = document.createElement("div");
     when.textContent = trade.buyAtDisplay || "—";
 
@@ -97,6 +106,8 @@ function render(body, trades) {
     row.appendChild(symbol);
     row.appendChild(reason);
     row.appendChild(price);
+    row.appendChild(last);
+    row.appendChild(change);
     row.appendChild(when);
     body.appendChild(row);
   });

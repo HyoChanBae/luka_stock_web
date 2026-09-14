@@ -54,6 +54,7 @@
         <button type="button" class="close" aria-label="닫기">×</button>
         <h2>봇 거래내역</h2>
         <p id="tradeModalBot" class="small"></p>
+        <p class="small trade-quote-hint">현재가·등락률은 임시 더미 시세입니다. 실제 시세가 아닙니다.</p>
         <div id="tradeModalBody" class="mt-16"></div>
     </div>
 </div>

@@ -553,7 +553,7 @@ body.touch-chart.page-daily-report #tv_chart_container {
 
 .trade-row {
   display: grid;
-  grid-template-columns: .8fr .6fr minmax(0, 2fr) .7fr .8fr;
+  grid-template-columns: .75fr .55fr minmax(0, 1.7fr) .7fr .7fr .6fr .85fr;
   gap: 12px;
   align-items: start;
   padding: 14px 0;
@@ -760,7 +760,11 @@ body.touch-chart.page-daily-report #tv_chart_container {
 }
 
 .trade-box {
-  width: min(860px, 100%);
+  width: min(1080px, 100%);
+}
+
+.trade-quote-hint {
+  margin: 6px 0 0;
 }
 
 .close {

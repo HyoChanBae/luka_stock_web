@@ -17,6 +17,7 @@ public class BotTrade {
     private final String selectReason;
     private final Double buyPrice;
     private final LocalDateTime buyAt;
+    private final Double lastPrice;
 
     public BotTrade(
             long tradeId,
@@ -27,6 +28,19 @@ public class BotTrade {
             Double buyPrice,
             LocalDateTime buyAt
     ) {
+        this(tradeId, botId, symbol, symbolName, selectReason, buyPrice, buyAt, null);
+    }
+
+    public BotTrade(
+            long tradeId,
+            long botId,
+            String symbol,
+            String symbolName,
+            String selectReason,
+            Double buyPrice,
+            LocalDateTime buyAt,
+            Double lastPrice
+    ) {
         this.tradeId = tradeId;
         this.botId = botId;
         this.symbol = symbol;
@@ -34,6 +48,11 @@ public class BotTrade {
         this.selectReason = selectReason;
         this.buyPrice = buyPrice;
         this.buyAt = buyAt;
+        this.lastPrice = lastPrice;
+    }
+
+    public BotTrade withLastPrice(Double price) {
+        return new BotTrade(tradeId, botId, symbol, symbolName, selectReason, buyPrice, buyAt, price);
     }
 
     public long getTradeId() {
@@ -61,10 +80,38 @@ public class BotTrade {
     }
 
     public String getBuyPriceDisplay() {
-        if (buyPrice == null) {
+        return formatPrice(buyPrice);
+    }
+
+    public Double getLastPrice() {
+        return lastPrice;
+    }
+
+    public String getLastPriceDisplay() {
+        return formatPrice(lastPrice);
+    }
+
+    public Double getChangePct() {
+        if (buyPrice == null || lastPrice == null || buyPrice == 0) {
+            return null;
+        }
+        return (lastPrice - buyPrice) / buyPrice * 100;
+    }
+
+    public String getChangePctDisplay() {
+        Double pct = getChangePct();
+        if (pct == null) {
             return "—";
         }
-        return String.format(java.util.Locale.US, "%,.2f", buyPrice);
+        return String.format(java.util.Locale.US, "%+.2f%%", pct);
+    }
+
+    public String getChangeClass() {
+        Double pct = getChangePct();
+        if (pct == null || pct < 0) {
+            return "neg";
+        }
+        return "perf";
     }
 
     @JsonIgnore
@@ -77,5 +124,12 @@ public class BotTrade {
             return "—";
         }
         return buyAt.format(DISPLAY);
+    }
+
+    private static String formatPrice(Double value) {
+        if (value == null) {
+            return "—";
+        }
+        return String.format(java.util.Locale.US, "%,.2f", value);
     }
 }

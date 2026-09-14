@@ -13,9 +13,11 @@ import java.util.List;
 public class BotService {
 
     private final BotRepository botRepository;
+    private final DummyQuoteService dummyQuoteService;
 
-    public BotService(BotRepository botRepository) {
+    public BotService(BotRepository botRepository, DummyQuoteService dummyQuoteService) {
         this.botRepository = botRepository;
+        this.dummyQuoteService = dummyQuoteService;
     }
 
     public List<BotRank> league() {
@@ -28,7 +30,11 @@ public class BotService {
 
     public List<BotTrade> trades(long botId) {
         try {
-            return botRepository.findTrades(botId);
+            return botRepository.findTrades(botId).stream()
+                    .map(trade -> trade.withLastPrice(
+                            dummyQuoteService.lastPrice(trade.getSymbol(), trade.getBuyPrice())
+                    ))
+                    .toList();
         } catch (Exception ex) {
             return List.of();
         }
