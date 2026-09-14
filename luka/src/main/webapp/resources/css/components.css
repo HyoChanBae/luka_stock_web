@@ -546,6 +546,19 @@ body.touch-chart.page-daily-report #tv_chart_container {
   font-size: 15px;
 }
 
+.bot-describe {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bot-describe img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
 .perf {
   color: var(--green);
   font-weight: 850;

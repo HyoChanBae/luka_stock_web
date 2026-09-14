@@ -20,6 +20,13 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+        PageAttributes.apply(model, "bots", "봇 랭킹");
+        model.addAttribute("botLeague", botService.league());
+        return "bots";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
         PageAttributes.apply(model, "home", "내 투자");
         model.addAttribute("assetAmount", investmentMockService.assetAmount());
         model.addAttribute("monthlyReturn", investmentMockService.monthlyReturn());

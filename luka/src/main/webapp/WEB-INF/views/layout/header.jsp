@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>QuietAlpha — ${pageTitle}</title>
+    <title>Luka — ${pageTitle}</title>
     <link rel="stylesheet" href="<c:url value='/resources/css/base.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/layout.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/components.css'/>"/>
@@ -30,8 +30,8 @@
     <aside id="app-sidebar">
         <div class="aside-head">
             <div class="brand">
-                <span class="brand-text">Quiet<span class="brand-accent">Alpha</span></span>
-                <span class="brand-mark" aria-hidden="true">Q</span>
+                <span class="brand-text brand-accent">Luka</span>
+                <span class="brand-mark" aria-hidden="true">L</span>
             </div>
             <button type="button" class="sidebar-toggle" id="sidebarToggle"
                     aria-controls="app-sidebar" aria-expanded="true" aria-label="사이드바 접기" title="사이드바 접기">
@@ -40,11 +40,11 @@
         </div>
         <div class="nav-title">MY INVESTMENT</div>
         <nav>
-            <a href="<c:url value='/'/>" class="${activeNav eq 'home' ? 'active' : ''}" title="대시보드">
-                <span class="ico">⌂</span><span class="nav-label">대시보드</span>
-            </a>
-            <a href="<c:url value='/bots'/>" class="${activeNav eq 'bots' ? 'active' : ''}" title="봇 랭킹">
+            <a href="<c:url value='/'/>" class="${activeNav eq 'bots' ? 'active' : ''}" title="봇 랭킹">
                 <span class="ico">◈</span><span class="nav-label">봇 랭킹</span>
+            </a>
+            <a href="<c:url value='/dashboard'/>" class="${activeNav eq 'home' ? 'active' : ''}" title="대시보드">
+                <span class="ico">⌂</span><span class="nav-label">대시보드</span>
             </a>
             <a href="<c:url value='/scenario'/>" class="${activeNav eq 'scenario' ? 'active' : ''}" title="내 투자 시나리오">
                 <span class="ico">＋</span><span class="nav-label">내 투자 시나리오</span>
@@ -73,7 +73,7 @@
         </nav>
         <div class="sidebox">
             <b>주식창을 덜 봐도 괜찮아요</b>
-            <p>중요한 판단과 위험 신호만 QuietAlpha가 정리해드려요.</p>
+            <p>중요한 판단과 위험 신호만 Luka가 정리해드려요.</p>
         </div>
     </aside>
     <main>

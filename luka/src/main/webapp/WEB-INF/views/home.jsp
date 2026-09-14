@@ -97,7 +97,7 @@
     <div class="card span5">
         <div class="hrow">
             <h3 class="section-title">이번 달 가장 잘한 AI</h3>
-            <a class="link" href="<c:url value='/bots'/>">전체 랭킹 ›</a>
+            <a class="link" href="<c:url value='/'/>">전체 랭킹 ›</a>
         </div>
         <c:forEach items="${homeBots}" var="bot" varStatus="status">
             <c:if test="${status.first}">

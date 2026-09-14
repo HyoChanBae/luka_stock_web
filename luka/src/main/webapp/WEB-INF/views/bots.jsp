@@ -47,6 +47,13 @@
             </c:choose>
         </div>
     </div>
+
+    <div class="card span12 bot-describe">
+        <img src="<c:url value='/resources/img/bots/luka_bot_describe_korean.png'/>"
+             alt="Luka 봇 설명 (한국어)"/>
+        <img src="<c:url value='/resources/img/bots/luka_bot_describe_English.png'/>"
+             alt="Luka bot description (English)"/>
+    </div>
 </section>
 
 <div id="tradeModal" class="modal">
