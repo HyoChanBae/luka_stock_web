@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.config.ChartProperties;
 import com.example.service.MarketReportService;
 import com.example.web.PageAttributes;
 import org.springframework.stereotype.Controller;
@@ -12,15 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DailyReportController {
 
     private final MarketReportService marketReportService;
+    private final ChartProperties chartProperties;
 
-    public DailyReportController(MarketReportService marketReportService) {
+    public DailyReportController(MarketReportService marketReportService, ChartProperties chartProperties) {
         this.marketReportService = marketReportService;
+        this.chartProperties = chartProperties;
     }
 
     @GetMapping
     public String dailyReport(Model model) {
         PageAttributes.apply(model, "daily-report", "일일 리포트");
         model.addAttribute("marketReport", marketReportService.latest());
+        model.addAttribute("chartEmbedUrl", chartProperties.getEmbedUrl());
         return "daily-report";
     }
 }
