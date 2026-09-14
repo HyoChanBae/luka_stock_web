@@ -21,6 +21,7 @@ public class MarketReportRepository {
                 """
                 SELECT REPORT, CREATED_AT
                 FROM DEMO_RAW_DB.RAW.MARKET_REPORTS
+                WHERE SYMBOLS ='MARKET' 
                 ORDER BY CREATED_AT DESC
                 LIMIT 1
                 """,
