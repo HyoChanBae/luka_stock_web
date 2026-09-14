@@ -15,8 +15,10 @@
 
 <script src="<c:url value='/resources/js/ui/modal.js'/>"></script>
 <script src="<c:url value='/resources/js/ui/switch.js'/>"></script>
+<script src="<c:url value='/resources/js/ui/sidebar.js'/>"></script>
 <script src="<c:url value='/resources/js/page/scenario.js'/>"></script>
 <script src="<c:url value='/resources/js/page/bots.js'/>"></script>
+<script src="<c:url value='/resources/js/page/investment-journal.js'/>"></script>
 <script src="<c:url value='/resources/js/app.js'/>"></script>
 </body>
 </html>

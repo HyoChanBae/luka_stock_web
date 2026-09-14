@@ -4,6 +4,7 @@
   min-height: 100vh;
   width: 100%;
   min-width: 0;
+  transition: grid-template-columns .2s ease;
 }
 
 aside {
@@ -13,17 +14,105 @@ aside {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.aside-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 18px;
 }
 
 .brand {
   font-size: 21px;
   font-weight: 900;
   letter-spacing: -.4px;
-  padding: 0 10px 26px;
+  padding: 0 10px;
+  min-width: 0;
 }
 
-.brand span {
+.brand-accent {
   color: var(--blue);
+}
+
+.brand-mark {
+  display: none;
+  color: var(--blue);
+}
+
+.sidebar-toggle {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar-toggle:hover {
+  background: #f5f7f9;
+  color: var(--text);
+}
+
+.sidebar-toggle-icon {
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-left: 2px;
+}
+
+html.nav-collapsed .app {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+
+html.nav-collapsed aside {
+  padding: 20px 8px;
+}
+
+html.nav-collapsed .aside-head {
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+html.nav-collapsed .brand {
+  padding: 0;
+  font-size: 20px;
+}
+
+html.nav-collapsed .brand-text,
+html.nav-collapsed .nav-title,
+html.nav-collapsed .nav-label,
+html.nav-collapsed .sidebox {
+  display: none;
+}
+
+html.nav-collapsed .brand-mark {
+  display: block;
+}
+
+html.nav-collapsed .sidebar-toggle-icon {
+  transform: rotate(-135deg);
+  margin-left: 0;
+  margin-right: 2px;
+}
+
+html.nav-collapsed nav a {
+  justify-content: center;
+  padding: 12px 0;
+  gap: 0;
 }
 
 .nav-title {
@@ -31,6 +120,14 @@ aside {
   color: #a3abb5;
   padding: 0 12px 8px;
   font-weight: 700;
+}
+
+nav {
+  padding-bottom: 140px;
+}
+
+html.nav-collapsed nav {
+  padding-bottom: 8px;
 }
 
 nav a {
@@ -48,6 +145,7 @@ nav a {
   cursor: pointer;
   margin: 2px 0;
   font-weight: 650;
+  white-space: nowrap;
 }
 
 nav a:hover {
@@ -150,11 +248,13 @@ main {
 .mt-25 { margin-top: 25px; }
 
 @media (max-width: 1050px) {
-  .app {
+  .app,
+  html.nav-collapsed .app {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  aside {
+  aside,
+  html.nav-collapsed aside {
     height: auto;
     position: sticky;
     top: 0;
@@ -167,8 +267,35 @@ main {
     background: #fff;
   }
 
-  .brand {
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .aside-head,
+  html.nav-collapsed .aside-head {
+    margin-bottom: 0;
+    flex-direction: row;
+  }
+
+  html.nav-collapsed .brand-text,
+  html.nav-collapsed .nav-label {
+    display: inline;
+  }
+
+  html.nav-collapsed .brand-mark {
+    display: none;
+  }
+
+  html.nav-collapsed nav a {
+    justify-content: flex-start;
+    padding: 12px 13px;
+    gap: 11px;
+  }
+
+  .brand,
+  html.nav-collapsed .brand {
     padding: 0 16px 10px;
+    font-size: 21px;
   }
 
   .nav-title,

@@ -12,39 +12,63 @@
     <c:if test="${activeNav eq 'daily-report-final'}">
         <link rel="stylesheet" href="<c:url value='/resources/css/report-final.css'/>"/>
     </c:if>
+    <c:if test="${activeNav eq 'investment-journal'}">
+        <link rel="stylesheet" href="<c:url value='/resources/css/investment-journal.css'/>"/>
+    </c:if>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("quietalpha-nav-collapsed") === "1") {
+                    document.documentElement.classList.add("nav-collapsed");
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
-<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' or activeNav eq 'daily-trading-report' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''}">
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' or activeNav eq 'daily-trading-report' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''} ${activeNav eq 'investment-journal' ? 'page-journal' : ''}">
 <div class="app">
-    <aside>
-        <div class="brand">Quiet<span>Alpha</span></div>
+    <aside id="app-sidebar">
+        <div class="aside-head">
+            <div class="brand">
+                <span class="brand-text">Quiet<span class="brand-accent">Alpha</span></span>
+                <span class="brand-mark" aria-hidden="true">Q</span>
+            </div>
+            <button type="button" class="sidebar-toggle" id="sidebarToggle"
+                    aria-controls="app-sidebar" aria-expanded="true" aria-label="사이드바 접기" title="사이드바 접기">
+                <span class="sidebar-toggle-icon" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="nav-title">MY INVESTMENT</div>
         <nav>
-            <a href="<c:url value='/'/>" class="${activeNav eq 'home' ? 'active' : ''}">
-                <span class="ico">⌂</span>대시보드
+            <a href="<c:url value='/'/>" class="${activeNav eq 'home' ? 'active' : ''}" title="대시보드">
+                <span class="ico">⌂</span><span class="nav-label">대시보드</span>
             </a>
-            <a href="<c:url value='/bots'/>" class="${activeNav eq 'bots' ? 'active' : ''}">
-                <span class="ico">◈</span>봇 랭킹
+            <a href="<c:url value='/bots'/>" class="${activeNav eq 'bots' ? 'active' : ''}" title="봇 랭킹">
+                <span class="ico">◈</span><span class="nav-label">봇 랭킹</span>
             </a>
-            <a href="<c:url value='/scenario'/>" class="${activeNav eq 'scenario' ? 'active' : ''}">
-                <span class="ico">＋</span>내 투자 시나리오
+            <a href="<c:url value='/scenario'/>" class="${activeNav eq 'scenario' ? 'active' : ''}" title="내 투자 시나리오">
+                <span class="ico">＋</span><span class="nav-label">내 투자 시나리오</span>
             </a>
-            <a href="<c:url value='/daily-report'/>" class="${activeNav eq 'daily-report' ? 'active' : ''}">
-                <span class="ico">▤</span>일일 리포트
+            <a href="<c:url value='/daily-report'/>" class="${activeNav eq 'daily-report' ? 'active' : ''}" title="일일 리포트">
+                <span class="ico">▤</span><span class="nav-label">일일 리포트</span>
             </a>
-            <a href="<c:url value='/daily-trading-report'/>" class="${activeNav eq 'daily-trading-report' ? 'active' : ''}">
-                <span class="ico">◈</span>일일 트레이딩 리포트
+            <a href="<c:url value='/daily-trading-report'/>" class="${activeNav eq 'daily-trading-report' ? 'active' : ''}" title="일일 트레이딩 리포트">
+                <span class="ico">◈</span><span class="nav-label">일일 트레이딩 리포트</span>
             </a>
-            <a href="<c:url value='/daily-report-final'/>" class="${activeNav eq 'daily-report-final' ? 'active' : ''}">
-                <span class="ico">▤</span>일일 리포트 최종
+            <a href="<c:url value='/investment-journal'/>" class="${activeNav eq 'investment-journal' ? 'active' : ''}" title="투자 기록">
+                <span class="ico">▦</span><span class="nav-label">투자 기록</span>
             </a>
-            <a href="<c:url value='/chart'/>" class="${activeNav eq 'chart' ? 'active' : ''}">
-                <span class="ico">◈</span>차트
+            <a href="<c:url value='/daily-report-final'/>" class="${activeNav eq 'daily-report-final' ? 'active' : ''}" title="일일 리포트 최종">
+                <span class="ico">▤</span><span class="nav-label">일일 리포트 최종</span>
             </a>
-            <a href="<c:url value='/report'/>" class="${activeNav eq 'report' ? 'active' : ''}">
-                <span class="ico">▤</span>리포트 알림
+            <a href="<c:url value='/chart'/>" class="${activeNav eq 'chart' ? 'active' : ''}" title="차트">
+                <span class="ico">◈</span><span class="nav-label">차트</span>
             </a>
-            <a href="<c:url value='/alerts'/>" class="${activeNav eq 'alerts' ? 'active' : ''}">
-                <span class="ico">◎</span>알림 전략
+            <a href="<c:url value='/report'/>" class="${activeNav eq 'report' ? 'active' : ''}" title="리포트 알림">
+                <span class="ico">▤</span><span class="nav-label">리포트 알림</span>
+            </a>
+            <a href="<c:url value='/alerts'/>" class="${activeNav eq 'alerts' ? 'active' : ''}" title="알림 전략">
+                <span class="ico">◎</span><span class="nav-label">알림 전략</span>
             </a>
         </nav>
         <div class="sidebox">
