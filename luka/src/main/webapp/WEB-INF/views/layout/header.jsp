@@ -25,7 +25,7 @@
         })();
     </script>
 </head>
-<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' or activeNav eq 'daily-trading-report' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' ? 'page-bots' : ''} ${activeNav eq 'investment-journal' ? 'page-journal' : ''}">
+<body class="${activeNav eq 'daily-report' ? 'page-daily-report' : ''} ${activeNav eq 'chart' or activeNav eq 'daily-trading-report' ? 'page-chart' : ''} ${activeNav eq 'daily-report-final' ? 'page-report-final' : ''} ${activeNav eq 'bots' or activeNav eq 'bots-scenario' ? 'page-bots' : ''} ${activeNav eq 'investment-journal' ? 'page-journal' : ''}">
 <div class="app">
     <aside id="app-sidebar">
         <div class="aside-head">
@@ -42,6 +42,9 @@
         <nav>
             <a href="<c:url value='/'/>" class="${activeNav eq 'bots' ? 'active' : ''}" title="봇 랭킹">
                 <span class="ico">◈</span><span class="nav-label">봇 랭킹</span>
+            </a>
+            <a href="<c:url value='/bots-scenario'/>" class="${activeNav eq 'bots-scenario' ? 'active' : ''}" title="봇 랭킹_시나리오">
+                <span class="ico">◈</span><span class="nav-label">봇 랭킹_시나리오</span>
             </a>
             <a href="<c:url value='/dashboard'/>" class="${activeNav eq 'home' ? 'active' : ''}" title="대시보드">
                 <span class="ico">⌂</span><span class="nav-label">대시보드</span>
