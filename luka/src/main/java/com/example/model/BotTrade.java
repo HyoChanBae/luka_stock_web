@@ -108,7 +108,10 @@ public class BotTrade {
 
     public String getChangeClass() {
         Double pct = getChangePct();
-        if (pct == null || pct < 0) {
+        if (pct == null) {
+            return "";
+        }
+        if (pct < 0) {
             return "neg";
         }
         return "perf";

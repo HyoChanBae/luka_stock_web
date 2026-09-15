@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class BotService {
 
-    private final BotRepository botRepository;
-    private final DummyQuoteService dummyQuoteService;
+    private static final Logger LOG = Logger.getLogger(BotService.class.getName());
 
-    public BotService(BotRepository botRepository, DummyQuoteService dummyQuoteService) {
+    private final BotRepository botRepository;
+
+    public BotService(BotRepository botRepository) {
         this.botRepository = botRepository;
-        this.dummyQuoteService = dummyQuoteService;
     }
 
     public List<BotRank> league() {
@@ -30,12 +32,9 @@ public class BotService {
 
     public List<BotTrade> trades(long botId) {
         try {
-            return botRepository.findTrades(botId).stream()
-                    .map(trade -> trade.withLastPrice(
-                            dummyQuoteService.lastPrice(trade.getSymbol(), trade.getBuyPrice())
-                    ))
-                    .toList();
+            return botRepository.findTrades(botId);
         } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "봇 거래내역 조회 실패 botId=" + botId, ex);
             return List.of();
         }
     }

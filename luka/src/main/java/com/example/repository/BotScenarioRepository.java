@@ -65,10 +65,35 @@ public class BotScenarioRepository {
     public List<BotTrade> findTrades(long botId) {
         return jdbcTemplate.query(
                 """
-                SELECT TRADE_ID, BOT_ID, SYMBOL, SYMBOL_NAME, SELECT_REASON, BUY_PRICE, BUY_AT
-                FROM DEMO_RAW_DB.RAW.BOT_TRADE_SENARIO
-                WHERE BOT_ID = ?
-                ORDER BY BUY_AT DESC
+                SELECT
+                    t.TRADE_ID,
+                    t.BOT_ID,
+                    t.SYMBOL,
+                    COALESCE(t.SYMBOL_NAME, q.SYMBOL_NAME) AS SYMBOL_NAME,
+                    t.SELECT_REASON,
+                    t.BUY_PRICE,
+                    t.BUY_AT,
+                    q.CURRENT_PRICE
+                FROM DEMO_RAW_DB.RAW.BOT_TRADE_SENARIO t
+                LEFT JOIN (
+                    SELECT SYMBOL, SYMBOL_NAME, CURRENT_PRICE
+                    FROM DEMO_RAW_DB.RAW.BOT_TRADE_CURRENT_INFO
+                    QUALIFY ROW_NUMBER() OVER (
+                        PARTITION BY TRIM(TO_VARCHAR(SYMBOL))
+                        ORDER BY UPDATE_DT DESC NULLS LAST, CREATE_DT DESC NULLS LAST
+                    ) = 1
+                ) q
+                    ON (
+                        TRIM(TO_VARCHAR(q.SYMBOL)) = TRIM(TO_VARCHAR(t.SYMBOL))
+                        OR SPLIT_PART(TRIM(TO_VARCHAR(q.SYMBOL)), '.', 1) = TRIM(TO_VARCHAR(t.SYMBOL))
+                        OR TRIM(TO_VARCHAR(q.SYMBOL)) = SPLIT_PART(TRIM(TO_VARCHAR(t.SYMBOL)), '.', 1)
+                    )
+                WHERE t.BOT_ID = ?
+                QUALIFY ROW_NUMBER() OVER (
+                    PARTITION BY t.TRADE_ID
+                    ORDER BY q.CURRENT_PRICE DESC NULLS LAST
+                ) = 1
+                ORDER BY t.BUY_AT DESC
                 """,
                 (rs, i) -> {
                     Timestamp buyAt = rs.getTimestamp("BUY_AT");
@@ -79,7 +104,8 @@ public class BotScenarioRepository {
                             rs.getString("SYMBOL_NAME"),
                             rs.getString("SELECT_REASON"),
                             toDouble(rs.getObject("BUY_PRICE")),
-                            buyAt == null ? null : buyAt.toLocalDateTime()
+                            buyAt == null ? null : buyAt.toLocalDateTime(),
+                            toDouble(rs.getObject("CURRENT_PRICE"))
                     );
                 },
                 botId
