@@ -793,6 +793,124 @@ body.touch-chart.page-daily-report #tv_chart_container {
   text-align: right;
 }
 
+.trade-price-head,
+.trade-last {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.trade-chart-link {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.page-bots .trade-chart-link {
+  font-size: 12px;
+}
+
+.chart-popup {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  width: min(720px, calc(100vw - 32px));
+  height: min(540px, calc(100vh - 96px));
+  min-width: 360px;
+  min-height: 280px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+  overflow: hidden;
+  resize: both;
+}
+
+.chart-popup.on {
+  display: flex;
+}
+
+.chart-popup.dragging {
+  user-select: none;
+}
+
+.trade-box h2 {
+  cursor: grab;
+  user-select: none;
+}
+
+.trade-box.dragging h2,
+.chart-popup.dragging .chart-popup-head {
+  cursor: grabbing;
+}
+
+.chart-popup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px 12px 18px;
+  background: #f7f9fc;
+  border-bottom: 1px solid var(--line);
+  cursor: grab;
+  flex-shrink: 0;
+  touch-action: none;
+  user-select: none;
+}
+
+.chart-popup-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.chart-popup-head .close {
+  float: none;
+  flex-shrink: 0;
+}
+
+.chart-popup-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #fff;
+}
+
+.chart-popup-body iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.chart-popup-shield {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.chart-popup-shield.on {
+  display: block;
+}
+
+#tradeModal.comparing {
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: #0005;
+}
+
+#tradeModal.comparing .trade-box {
+  width: min(920px, calc(100vw - 48px));
+}
+
 .close {
   float: right;
   border: 0;
@@ -902,6 +1020,19 @@ body.touch-chart.page-daily-report #tv_chart_container {
 
   .trade-row > *:nth-child(3) {
     grid-column: 1 / -1;
+  }
+
+  .chart-popup {
+    width: calc(100vw - 16px);
+    height: min(62vh, 480px);
+    min-width: 0;
+    right: 8px;
+    top: auto;
+    bottom: 8px;
+  }
+
+  #tradeModal.comparing .trade-box {
+    width: 100%;
   }
 
   .card,

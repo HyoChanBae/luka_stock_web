@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.config.ChartProperties;
 import com.example.service.BotService;
 import com.example.service.InvestmentMockService;
 import com.example.web.PageAttributes;
@@ -12,16 +13,19 @@ public class HomeController {
 
     private final InvestmentMockService investmentMockService;
     private final BotService botService;
+    private final ChartProperties chartProperties;
 
-    public HomeController(InvestmentMockService investmentMockService, BotService botService) {
+    public HomeController(InvestmentMockService investmentMockService, BotService botService, ChartProperties chartProperties) {
         this.investmentMockService = investmentMockService;
         this.botService = botService;
+        this.chartProperties = chartProperties;
     }
 
     @GetMapping("/")
     public String home(Model model) {
         PageAttributes.apply(model, "bots", "봇 랭킹");
         model.addAttribute("botLeague", botService.league());
+        model.addAttribute("chartEmbedUrl", chartProperties.getEmbedUrl());
         return "bots";
     }
 

@@ -68,4 +68,15 @@
     </div>
 </div>
 
+<div id="tradeChartPopup" class="chart-popup" data-chart-url="<c:out value='${chartEmbedUrl}'/>">
+    <div class="chart-popup-head">
+        <h3>일일 트레이딩 리포트</h3>
+        <button type="button" class="close" aria-label="닫기">×</button>
+    </div>
+    <div class="chart-popup-body">
+        <iframe title="일일 트레이딩 리포트"></iframe>
+        <div class="chart-popup-shield" aria-hidden="true"></div>
+    </div>
+</div>
+
 <%@ include file="/WEB-INF/views/layout/footer.jsp" %>
