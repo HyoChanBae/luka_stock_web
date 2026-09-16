@@ -19,6 +19,7 @@ target/
 # Secrets
 application-secret.properties
 *.secret.properties
+*.properties
 
 # OS
 .DS_Store
