@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.model.BotRank;
 import com.example.model.BotTrade;
+import com.example.model.BotTradeHistory;
 import com.example.repository.BotRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +31,21 @@ public class BotService {
         }
     }
 
-    public List<BotTrade> trades(long botId) {
+    public BotTradeHistory trades(long botId) {
+        List<BotTrade> trades;
         try {
-            return botRepository.findTrades(botId);
+            trades = botRepository.findTrades(botId);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "봇 거래내역 조회 실패 botId=" + botId, ex);
-            return List.of();
+            trades = List.of();
         }
+        LocalDateTime updatedAt = null;
+        try {
+            updatedAt = botRepository.findLatestCurrentPriceUpdateDt();
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "현재가 업데이트 시각 조회 실패", ex);
+        }
+        return new BotTradeHistory(trades, updatedAt);
     }
 
     public BotRank find(long botId) {

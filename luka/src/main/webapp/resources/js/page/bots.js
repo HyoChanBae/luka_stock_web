@@ -4,9 +4,17 @@ QuietAlpha.BotDetail = {
   init: function () {
     var modal = document.getElementById("tradeModal");
     var title = document.getElementById("tradeModalBot");
+    var quoteAt = document.getElementById("tradeModalQuoteAt");
     var body = document.getElementById("tradeModalBody");
     if (!modal || !title || !body) {
       return;
+    }
+
+    function setQuoteAt(value) {
+      if (!quoteAt) {
+        return;
+      }
+      quoteAt.textContent = value ? "현재가 업데이트 시각 " + value : "";
     }
 
     function close() {
@@ -28,6 +36,7 @@ QuietAlpha.BotDetail = {
         var name = btn.getAttribute("data-bot-name") || "";
         var url = btn.getAttribute("data-trades-url");
         title.textContent = name;
+        setQuoteAt("");
         body.textContent = "불러오는 중...";
         modal.classList.add("on");
         if (!url) {
@@ -41,10 +50,13 @@ QuietAlpha.BotDetail = {
             }
             return res.json();
           })
-          .then(function (trades) {
+          .then(function (data) {
+            var trades = Array.isArray(data) ? data : (data && data.trades) || [];
+            setQuoteAt(data && data.currentPriceUpdatedAt);
             render(body, trades);
           })
           .catch(function () {
+            setQuoteAt("");
             body.textContent = "거래내역을 불러오지 못했습니다.";
           });
       });

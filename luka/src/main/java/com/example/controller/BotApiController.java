@@ -4,7 +4,7 @@ import com.example.api.BotCreateRequest;
 import com.example.api.BotPerformanceRequest;
 import com.example.api.BotTradeRequest;
 import com.example.model.BotRank;
-import com.example.model.BotTrade;
+import com.example.model.BotTradeHistory;
 import com.example.service.BotService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +36,7 @@ public class BotApiController {
     }
 
     @GetMapping(value = "/{botId}/trades", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BotTrade> trades(@PathVariable("botId") long botId) {
+    public BotTradeHistory trades(@PathVariable("botId") long botId) {
         return botService.trades(botId);
     }
 

@@ -52,7 +52,10 @@
     <div class="modalbox trade-box">
         <button type="button" class="close" aria-label="닫기">×</button>
         <h2>봇 거래내역</h2>
-        <p id="tradeModalBot" class="small"></p>
+        <div class="trade-modal-meta">
+            <p id="tradeModalBot" class="small"></p>
+            <p id="tradeModalQuoteAt" class="small trade-quote-hint"></p>
+        </div>
         <div id="tradeModalBody" class="mt-16"></div>
     </div>
 </div>

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -110,6 +111,22 @@ public class BotScenarioRepository {
                 },
                 botId
         );
+    }
+
+    public LocalDateTime findLatestCurrentPriceUpdateDt() {
+        List<LocalDateTime> rows = jdbcTemplate.query(
+                """
+                SELECT UPDATE_DT
+                FROM DEMO_RAW_DB.RAW.BOT_TRADE_CURRENT_INFO
+                ORDER BY UPDATE_DT DESC
+                LIMIT 1
+                """,
+                (rs, i) -> {
+                    Timestamp updatedAt = rs.getTimestamp("UPDATE_DT");
+                    return updatedAt == null ? null : updatedAt.toLocalDateTime();
+                }
+        );
+        return rows.isEmpty() ? null : rows.get(0);
     }
 
     private static Double toDouble(Object value) {

@@ -149,6 +149,22 @@ public class BotRepository {
         );
     }
 
+    public LocalDateTime findLatestCurrentPriceUpdateDt() {
+        List<LocalDateTime> rows = jdbcTemplate.query(
+                """
+                SELECT UPDATE_DT
+                FROM DEMO_RAW_DB.RAW.BOT_TRADE_CURRENT_INFO
+                ORDER BY UPDATE_DT DESC
+                LIMIT 1
+                """,
+                (rs, i) -> {
+                    Timestamp updatedAt = rs.getTimestamp("UPDATE_DT");
+                    return updatedAt == null ? null : updatedAt.toLocalDateTime();
+                }
+        );
+        return rows.isEmpty() ? null : rows.get(0);
+    }
+
     public long insertBot(
             String code,
             String name,

@@ -776,8 +776,21 @@ body.touch-chart.page-daily-report #tv_chart_container {
   width: min(1080px, 100%);
 }
 
+.trade-modal-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-right: 44px;
+}
+
+.trade-modal-meta p {
+  margin: 0;
+}
+
 .trade-quote-hint {
-  margin: 6px 0 0;
+  white-space: nowrap;
+  text-align: right;
 }
 
 .close {
