@@ -2,8 +2,27 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <div class="card span12 report-doc${reportWide ? ' report-wide' : ''}" id="${reportDomId}">
     <h3 class="report-card-title"><c:out value="${reportTitle}"/></h3>
-    <c:if test="${not empty reportData and not empty reportData.createdAtDisplay}">
-        <p class="report-date">${reportData.createdAtDisplay}</p>
+    <c:if test="${not empty reportData and (not empty reportData.createdAtDisplay or not empty reportData.marketContextLabel)}">
+        <p class="report-date">
+            <c:if test="${not empty reportData.createdAtDisplay}">${reportData.createdAtDisplay}</c:if>
+            <c:if test="${not empty reportData.marketContextLabel}">
+                <span class="report-context-group">
+                    <span class="report-context"><c:out value="${reportData.marketContextLabel}"/></span>
+                    <c:if test="${not empty reportData.marketContextSummary}">
+                        <span class="report-help">
+                            <button type="button"
+                                    class="report-help-btn"
+                                    aria-label="국면 설명"
+                                    aria-describedby="${reportDomId}-context-tip">?</button>
+                            <span id="${reportDomId}-context-tip" class="report-help-tip" role="tooltip">
+                                <b><c:out value="${reportData.marketContextLabel}"/></b>
+                                <span><c:out value="${reportData.marketContextSummary}"/></span>
+                            </span>
+                        </span>
+                    </c:if>
+                </span>
+            </c:if>
+        </p>
     </c:if>
     <c:choose>
         <c:when test="${empty reportData}">

@@ -27,7 +27,7 @@ public class MarketReportRepository {
     public MarketReport findLatestBySymbols(String symbols) {
         List<MarketReport> rows = jdbcTemplate.query(
                 """
-                SELECT REPORT, CREATED_AT
+                SELECT REPORT, CREATED_AT, TO_VARCHAR(MARKET_CONTEXT) AS MARKET_CONTEXT
                 FROM DEMO_RAW_DB.RAW.MARKET_REPORTS
                 WHERE SYMBOLS = ?
                 ORDER BY CREATED_AT DESC
@@ -37,7 +37,8 @@ public class MarketReportRepository {
                     Timestamp createdAt = rs.getTimestamp("CREATED_AT");
                     return new MarketReport(
                             rs.getString("REPORT"),
-                            createdAt == null ? null : createdAt.toLocalDateTime()
+                            createdAt == null ? null : createdAt.toLocalDateTime(),
+                            rs.getString("MARKET_CONTEXT")
                     );
                 },
                 symbols
