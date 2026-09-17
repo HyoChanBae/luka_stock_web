@@ -2,7 +2,6 @@ package com.example.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MarketReport {
@@ -12,12 +11,15 @@ public class MarketReport {
 
     private final String report;
     private final LocalDateTime createdAt;
+    private final String sourceTime;
     private final List<MarketReportSection> sections;
 
     public MarketReport(String report, LocalDateTime createdAt) {
         this.report = report;
         this.createdAt = createdAt;
-        this.sections = parseSections(report);
+        MarketReportParser.Parsed parsed = MarketReportParser.parse(report);
+        this.sourceTime = parsed.sourceTime();
+        this.sections = parsed.sections();
     }
 
     public String getReport() {
@@ -32,56 +34,17 @@ public class MarketReport {
         return createdAt;
     }
 
+    public String getSourceTime() {
+        return sourceTime;
+    }
+
     public String getCreatedAtDisplay() {
+        if (sourceTime != null && !sourceTime.isBlank()) {
+            return sourceTime;
+        }
         if (createdAt == null) {
             return "";
         }
         return createdAt.format(DISPLAY);
-    }
-
-    static List<MarketReportSection> parseSections(String raw) {
-        List<MarketReportSection> sections = new ArrayList<>();
-        if (raw == null || raw.isBlank()) {
-            return sections;
-        }
-
-        String title = null;
-        List<String> items = new ArrayList<>();
-        for (String line : raw.replace("\r\n", "\n").split("\n")) {
-            String text = line.trim();
-            if (text.isEmpty()) {
-                continue;
-            }
-            if (text.startsWith("-")) {
-                String item = text.replaceFirst("^-\\s*", "").trim();
-                if (!item.isEmpty()) {
-                    items.addAll(splitSentences(item));
-                }
-                continue;
-            }
-            flush(sections, title, items);
-            title = text.replaceAll("\\s+-\\s*$", "").trim();
-            items = new ArrayList<>();
-        }
-        flush(sections, title, items);
-        return sections;
-    }
-
-    static List<String> splitSentences(String text) {
-        List<String> sentences = new ArrayList<>();
-        for (String part : text.split("(?<=[.。])\\s+")) {
-            String sentence = part.trim();
-            if (!sentence.isEmpty()) {
-                sentences.add(sentence);
-            }
-        }
-        return sentences;
-    }
-
-    private static void flush(List<MarketReportSection> sections, String title, List<String> items) {
-        if (title == null || title.isBlank() || items.isEmpty()) {
-            return;
-        }
-        sections.add(new MarketReportSection(title, List.copyOf(items)));
     }
 }

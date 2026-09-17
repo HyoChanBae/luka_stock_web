@@ -24,6 +24,7 @@ public class DailyReportController {
     public String dailyReport(Model model) {
         PageAttributes.apply(model, "daily-report", "일일 리포트");
         model.addAttribute("marketReport", marketReportService.latest());
+        model.addAttribute("sectorReport", marketReportService.latestSector());
         model.addAttribute("chartEmbedUrl", chartProperties.getEmbedUrl());
         return "daily-report";
     }

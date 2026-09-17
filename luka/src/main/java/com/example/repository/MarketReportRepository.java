@@ -17,11 +17,19 @@ public class MarketReportRepository {
     }
 
     public MarketReport findLatest() {
+        return findLatestBySymbols("MARKET");
+    }
+
+    public MarketReport findLatestSector() {
+        return findLatestBySymbols("MACRO");
+    }
+
+    public MarketReport findLatestBySymbols(String symbols) {
         List<MarketReport> rows = jdbcTemplate.query(
                 """
                 SELECT REPORT, CREATED_AT
                 FROM DEMO_RAW_DB.RAW.MARKET_REPORTS
-                WHERE SYMBOLS ='MARKET' 
+                WHERE SYMBOLS = ?
                 ORDER BY CREATED_AT DESC
                 LIMIT 1
                 """,
@@ -31,7 +39,8 @@ public class MarketReportRepository {
                             rs.getString("REPORT"),
                             createdAt == null ? null : createdAt.toLocalDateTime()
                     );
-                }
+                },
+                symbols
         );
         return rows.isEmpty() ? null : rows.get(0);
     }

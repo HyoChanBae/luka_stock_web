@@ -4,6 +4,8 @@ import com.example.model.MarketReport;
 import com.example.repository.MarketReportRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.function.Supplier;
+
 @Service
 public class MarketReportService {
 
@@ -14,8 +16,16 @@ public class MarketReportService {
     }
 
     public MarketReport latest() {
+        return fetch(marketReportRepository::findLatest);
+    }
+
+    public MarketReport latestSector() {
+        return fetch(marketReportRepository::findLatestSector);
+    }
+
+    private MarketReport fetch(Supplier<MarketReport> loader) {
         try {
-            return marketReportRepository.findLatest();
+            return loader.get();
         } catch (Exception ex) {
             return null;
         }

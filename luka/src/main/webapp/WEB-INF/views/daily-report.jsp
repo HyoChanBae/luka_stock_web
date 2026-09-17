@@ -3,34 +3,20 @@
 <%@ include file="/WEB-INF/views/layout/header.jsp" %>
 
 <section class="grid">
-    <div class="card span12 report-doc">
-        <h3 class="report-card-title">시장 리포트</h3>
-        <c:if test="${not empty marketReport and not empty marketReport.createdAtDisplay}">
-            <p class="report-date">${marketReport.createdAtDisplay}</p>
-        </c:if>
-        <c:choose>
-            <c:when test="${empty marketReport}">
-                <p class="small mt-16">아직 등록된 리포트가 없습니다.</p>
-            </c:when>
-            <c:when test="${empty marketReport.sections}">
-                <div class="report-body mt-16"><c:out value="${marketReport.report}"/></div>
-            </c:when>
-            <c:otherwise>
-                <div class="report-sections">
-                    <c:forEach items="${marketReport.sections}" var="section">
-                        <c:if test="${not empty section.items}">
-                            <article class="report-section">
-                                <h4><c:out value="${section.title}"/></h4>
-                                <c:forEach items="${section.items}" var="item">
-                                    <p class="report-item"><c:out value="${item}"/></p>
-                                </c:forEach>
-                            </article>
-                        </c:if>
-                    </c:forEach>
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </div>
+    <c:set var="reportTitle" value="시장 리포트" scope="request"/>
+    <c:set var="reportData" value="${marketReport}" scope="request"/>
+    <c:set var="reportDomId" value="market-report" scope="request"/>
+    <c:set var="reportEmptyMessage" value="아직 등록된 리포트가 없습니다." scope="request"/>
+    <c:set var="reportWide" value="${false}" scope="request"/>
+    <jsp:include page="/WEB-INF/views/fragments/report-doc.jsp"/>
+
+    <c:set var="reportTitle" value="섹터 리포트" scope="request"/>
+    <c:set var="reportData" value="${sectorReport}" scope="request"/>
+    <c:set var="reportDomId" value="sector-report" scope="request"/>
+    <c:set var="reportEmptyMessage" value="아직 등록된 섹터 리포트가 없습니다." scope="request"/>
+    <c:set var="reportWide" value="${true}" scope="request"/>
+    <jsp:include page="/WEB-INF/views/fragments/report-doc.jsp"/>
+
 <%--<div class="card span12 chart-card">
         <div id="tv_chart_container"></div>
     </div> --%>
